@@ -14,4 +14,4 @@ class LogTokens(Base):
     expires_at: Mapped[datetime] = mapped_column()
     is_active: Mapped[bool] = mapped_column(default=True)
 
-    user = relationship("UserModel", back_populates="tokens")
+    user = relationship("User", back_populates="tokens")
