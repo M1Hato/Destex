@@ -7,12 +7,12 @@ from app.models.user_model import User
 class UserRepo:
 
     @staticmethod
-    async def get_user_by_email(session: AsyncSession, email: str):
+    async def get_user_by_email(email: str, session: AsyncSession):
         return await session.scalar(
             select(User).where(User.email == email))
 
     @staticmethod
-    async def create_user(user: User, session: AsyncSession):
+    async def create_user_repo(user: User, session: AsyncSession):
         session.add(user)
         try:
             await session.commit()
@@ -21,7 +21,4 @@ class UserRepo:
         except IntegrityError:
             await session.rollback()
             return None
-
-
-
 
