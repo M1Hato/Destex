@@ -33,6 +33,6 @@ class AuthService:
         refresh_token = create_refresh_token(data={"sub": user.email})
         await RefreshTokenRepo.save_refresh_token(user.id, refresh_token, session)
 
-        #Збеженння в кукі soon
+        #Збереження в кукі
 
         return {"access_token": access_token}
