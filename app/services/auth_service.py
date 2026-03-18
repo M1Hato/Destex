@@ -1,5 +1,6 @@
 from fastapi import HTTPException, Response
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.requests import Request
 from app.config import settings
 from app.core.login_token import create_access_token, create_refresh_token
 from app.schemas.user_schemas import UserCreate, UserLogin
@@ -45,3 +46,15 @@ class AuthService:
         )
 
         return {"access_token": access_token}
+
+
+    @staticmethod
+    async def logout_user(request: Request, session: AsyncSession):
+
+        refresh_token = request.cookies.get("refresh_token")
+
+        if not refresh_token:
+            raise HTTPException(status_code=404, detail="Refresh token is missing")
+
+        await RefreshTokenRepo.deactivate_refresh_token(refresh_token, session)
+        return {"detail": "User logged out"}
