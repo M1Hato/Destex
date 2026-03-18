@@ -1,6 +1,7 @@
+from fastapi import HTTPException
 from datetime import datetime, timezone, timedelta
-
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.sql.expression import update
 
 from app.config import settings
 from app.models.log_tokens import LogTokens
@@ -30,4 +31,21 @@ class RefreshTokenRepo:
         await session.commit()
         await session.refresh(token)
         return token
+
+
+    @staticmethod
+    async def deactivate_refresh_token(refresh_token: str, session: AsyncSession):
+
+        if not refresh_token:
+            raise HTTPException(status_code=400, detail="Refresh token required")
+
+        stmt = (
+            update(LogTokens)
+            .where(LogTokens.refresh_token == refresh_token)
+            .values(is_active=False)
+        )
+
+        await session.execute(stmt)
+        await session.commit()
+
 
