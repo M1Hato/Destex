@@ -1,14 +1,14 @@
-from fastapi import HTTPException
-
+from fastapi import HTTPException, Response
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from app.config import settings
 from app.core.login_token import create_access_token, create_refresh_token
 from app.schemas.user_schemas import UserCreate, UserLogin
 from app.models.user_model import User
 from app.repositories.user_repo import UserRepo
-from app.core.security import hash_password, verify_password
+from app.core.security import hash_password
 from app.repositories.refresh_token_repo import RefreshTokenRepo
 
+REFRESH_TOKEN = settings.REFRESH_TOKEN_EXPIRE_MINUTES
 
 class AuthService:
 
@@ -26,13 +26,22 @@ class AuthService:
 
 
     @staticmethod
-    async def login_user(data: UserLogin, session: AsyncSession):
+    async def login_user(data: UserLogin, response: Response, session: AsyncSession):
         user = await UserRepo.login_user_repo(data, session)
 
         access_token = create_access_token(data={"sub": user.email})
         refresh_token = create_refresh_token(data={"sub": user.email})
+
         await RefreshTokenRepo.save_refresh_token(user.id, refresh_token, session)
 
         #Збереження в кукі
+        response.set_cookie(
+            key="refresh_token",
+            value=refresh_token,
+            secure=False,
+            httponly=True,
+            samesite="lax",
+            max_age=REFRESH_TOKEN
+        )
 
         return {"access_token": access_token}
