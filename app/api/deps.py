@@ -21,6 +21,10 @@ async def get_current_user(
 
     try:
         payload = decode_refresh_token(token)
+
+        if isinstance(payload, Exception):
+            raise HTTPException(status_code=400, detail="Invalid or expire token")
+
         email = payload.get("sub")
 
         if email is None:
