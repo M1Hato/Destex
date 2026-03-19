@@ -8,6 +8,7 @@ from app.models.user_model import User
 from app.repositories.user_repo import UserRepo
 from app.core.security import hash_password
 from app.repositories.refresh_token_repo import RefreshTokenRepo
+from app.core.login_token import decode_refresh_token
 
 REFRESH_TOKEN = settings.REFRESH_TOKEN_EXPIRE_MINUTES
 
@@ -58,3 +59,26 @@ class AuthService:
 
         await RefreshTokenRepo.deactivate_refresh_token(refresh_token, session)
         return {"detail": "User logged out"}
+
+    @staticmethod
+    async def refresh_access_token(request: Request, session: AsyncSession):
+        refresh_token = request.cookies.get("refresh_token")
+        token = await RefreshTokenRepo.get_active_refresh_token(refresh_token, session)
+
+        if not token:
+            raise HTTPException(status_code=404, detail="Refresh token is missing")
+
+        payload = decode_refresh_token(token.refresh_token)
+
+        if isinstance(payload, HTTPException) or not payload:
+            raise HTTPException(status_code=401, detail="Token is invalid or expired")
+
+        email = payload.get("sub")
+
+        user = await UserRepo.get_user_by_email(email, session)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        access_token = create_access_token(data={"sub": user.email})
+
+        return {"access_token": access_token}
