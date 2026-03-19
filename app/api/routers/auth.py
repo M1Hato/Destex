@@ -1,8 +1,10 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.requests import Request
 from starlette.responses import Response
-
+from app.api.deps import get_current_user
 from app.database import get_async_session
 from app.schemas.user_schemas import UserCreate, UserLogin
 from app.services.auth_service import AuthService
@@ -22,7 +24,7 @@ async def register_user(
 
 @auth_router.post("/login")
 async def login_user(
-        data: UserLogin,
+        data: Annotated[UserLogin, Depends()],
         response: Response,
         session: AsyncSession = Depends(get_async_session)
 ):
@@ -38,3 +40,12 @@ async def logout_user(
 
     response.delete_cookie("refresh_token")
     return result
+
+
+@auth_router.get("/get/user/{email}")
+async def get_user(
+        email: str,
+        current_user = Depends(get_current_user)
+):
+    return current_user
+
