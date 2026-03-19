@@ -24,3 +24,11 @@ def create_refresh_token(data: dict):
 
     encode_jwt = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return encode_jwt
+
+
+def decode_refresh_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except Exception as e:
+        return e
