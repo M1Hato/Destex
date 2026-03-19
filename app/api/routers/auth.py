@@ -14,6 +14,18 @@ auth_router = APIRouter(
 )
 
 
+# @auth_router.get("/get/user/{email}")
+# async def get_user(
+#         email: str,
+#         current_user = Depends(get_current_user)
+# ):
+#     return current_user
+@auth_router.get("/me")
+async def get_user(
+        current_user = Depends(get_current_user),
+):
+    return current_user
+
 @auth_router.post("/register")
 async def register_user(
         data: UserCreate,
@@ -41,11 +53,10 @@ async def logout_user(
     response.delete_cookie("refresh_token")
     return result
 
-
-@auth_router.get("/get/user/{email}")
-async def get_user(
-        email: str,
-        current_user = Depends(get_current_user)
+@auth_router.post("/refresh")
+async def get_new_access(
+        request: Request,
+        session: AsyncSession = Depends(get_async_session)
 ):
-    return current_user
-
+    result = await AuthService.refresh_access_token(request, session)
+    return result
