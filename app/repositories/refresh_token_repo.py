@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 from datetime import datetime, timezone, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql.expression import update
+from sqlalchemy.sql.expression import update, select
 
 from app.config import settings
 from app.models.log_tokens import LogTokens
@@ -47,5 +47,24 @@ class RefreshTokenRepo:
 
         await session.execute(stmt)
         await session.commit()
+
+
+    @staticmethod
+    async def get_token(refresh_token: str, session: AsyncSession):
+        return await session.scalar(
+            select(LogTokens)
+            .where(LogTokens.refresh_token == refresh_token)
+        )
+
+    @staticmethod
+    async def get_active_refresh_token(refresh_token: str, session: AsyncSession):
+        token = await RefreshTokenRepo.get_token(refresh_token, session)
+        aware_now = datetime.now(timezone.utc).replace(tzinfo=None)
+
+        if not token or not token.is_active or token.expires_at < aware_now:
+            raise HTTPException(status_code=401, detail="Refresh token is invalid or expired")
+
+        return token
+
 
 
