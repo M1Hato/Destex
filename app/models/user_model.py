@@ -12,5 +12,5 @@ class User(Base):
     password: Mapped[str] = mapped_column(nullable=False)
 
     tokens: Mapped[list["LogTokens"]] = relationship(back_populates="user")
-    tasks: Mapped[list["Task"]] = relationship(back_populates="user")
+    tasks: Mapped[list["Task"]] = relationship(back_populates="owner")
 
