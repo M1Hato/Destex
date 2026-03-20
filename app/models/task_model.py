@@ -12,7 +12,7 @@ class TaskPriority(enum.Enum):
 class Task(Base):
     __tablename__ = "tasks"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), default=None)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), default=None)
     title: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str] = mapped_column(nullable=True)
     deadline: Mapped[datetime] = mapped_column(nullable=False)
