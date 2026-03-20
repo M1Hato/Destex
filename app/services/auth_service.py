@@ -55,7 +55,7 @@ class AuthService:
         refresh_token = request.cookies.get("refresh_token")
 
         if not refresh_token:
-            raise HTTPException(status_code=404, detail="Refresh token is missing")
+            raise HTTPException(status_code=401, detail="Refresh token is missing")
 
         await RefreshTokenRepo.deactivate_refresh_token(refresh_token, session)
         return {"detail": "User logged out"}
@@ -66,7 +66,7 @@ class AuthService:
         token = await RefreshTokenRepo.get_active_refresh_token(refresh_token, session)
 
         if not token:
-            raise HTTPException(status_code=404, detail="Refresh token is missing")
+            raise HTTPException(status_code=401, detail="Refresh token is missing")
 
         payload = decode_refresh_token(token.refresh_token)
 
@@ -77,7 +77,7 @@ class AuthService:
 
         user = await UserRepo.get_user_by_email(email, session)
         if not user:
-            raise HTTPException(status_code=404, detail="User not found")
+            raise HTTPException(status_code=401, detail="User not found")
 
         access_token = create_access_token(data={"sub": user.email})
 
