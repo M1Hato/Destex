@@ -2,7 +2,6 @@ from fastapi import HTTPException
 from datetime import datetime, timezone, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.expression import update, select
-
 from app.config import settings
 from app.models.log_tokens import LogTokens
 
