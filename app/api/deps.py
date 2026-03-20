@@ -23,7 +23,7 @@ async def get_current_user(
         payload = decode_refresh_token(token)
 
         if isinstance(payload, Exception):
-            raise HTTPException(status_code=400, detail="Invalid or expire token")
+            raise HTTPException(status_code=401, detail="Invalid or expire token")
 
         email = payload.get("sub")
 
@@ -36,6 +36,6 @@ async def get_current_user(
     user = await UserRepo.get_user_by_email(email, session)
 
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=401, detail="User not found")
 
     return user
