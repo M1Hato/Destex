@@ -2,7 +2,6 @@ from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from app.core.security import verify_password
 from app.models.user_model import User
 from app.schemas.user_schemas import UserLogin
