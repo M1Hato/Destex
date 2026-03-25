@@ -28,14 +28,20 @@ class TaskRepo:
 
 
     @staticmethod
-    async def update_task_repo(task_id: int, task: TaskUpdate, session: AsyncSession):
-        update_data = task.model_dump(exclude_none=True)
+    async def update_task_repo(user_id: int, task_id: int, task: TaskUpdate, session: AsyncSession):
+        update_data = task.model_dump(exclude_unset=True)
         if not update_data:
             return None
 
-        change = await session.execute(update(Task).where(Task.id == task_id).values(**update_data))
-        await session.commit()
-        await session.refresh(task)
-        return task
+        stmt = (update(Task)
+                .where(
+    Task.id == task_id,
+                Task.user_id == user_id,
+                Task.is_deleted == False)
+                .values(**update_data).returning(Task))
 
-
+        result = await session.execute(stmt)
+        updated_task = result.scalar_one_or_none()
+        if updated_task:
+            await session.commit()
+        return updated_task
