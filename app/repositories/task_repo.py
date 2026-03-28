@@ -8,7 +8,7 @@ from app.schemas.task_schemas import TaskCreate, TaskUpdate, TaskRead
 class TaskRepo:
 
     @staticmethod
-    async def create_task_repo(task: Task, session: AsyncSession):
+    async def create_task_repo(task: TaskCreate, session: AsyncSession):
         session.add(task)
 
         try:
