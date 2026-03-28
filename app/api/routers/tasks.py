@@ -4,14 +4,14 @@ from typing import Annotated
 from app.services.task_service import TaskService
 from app.database import get_async_session
 from app.models.user_model import User
-from app.schemas.task_schemas import TaskCreate
+from app.schemas.task_schemas import TaskCreate, TaskUpdate
 from app.api.deps import get_current_user
 
 task_router = APIRouter(
     prefix="/tasks",
 )
 
-@task_router.post("/tasks")
+@task_router.post("/create")
 async def create_task(
         data: TaskCreate,
         current_user: User = Depends(get_current_user),
@@ -19,3 +19,13 @@ async def create_task(
 ):
 
     return await TaskService.create_task_service(data, current_user.id, session)
+
+
+@task_router.patch("/update/{task_id}")
+async def update_task(
+        data: TaskUpdate,
+        task_id: int,
+        current_user: User = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await TaskService.update_task_service(data, current_user.id, task_id, session)
