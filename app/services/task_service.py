@@ -18,3 +18,18 @@ class TaskService:
 
         return result
 
+    @staticmethod
+    async def update_task_service(data: TaskUpdate, user_id: int, task_id: int, session: AsyncSession):
+        update_data = data.model_dump(exclude_unset=True)
+
+        if "deadline" in update_data and update_data["deadline"] is not None:
+            update_data["deadline"] = update_data["deadline"].replace(tzinfo=None)
+
+        result = await TaskRepo.update_task_repo(update_data, user_id, task_id, session)
+        if result is None:
+            raise HTTPException(status_code=404, detail="Task was not found")
+        return result
+
+
+
+
