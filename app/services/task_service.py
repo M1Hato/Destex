@@ -8,6 +8,13 @@ from app.repositories.task_repo import TaskRepo
 class TaskService:
 
     @staticmethod
+    async def get_task_repo(user_id: int, session: AsyncSession):
+        result = await TaskRepo.get_user_task_repo(user_id, session)
+        if result is None:
+            raise HTTPException(status_code=404, detail="This user dont have tasks")
+        return result
+
+    @staticmethod
     async def create_task_service(data: TaskCreate, user_id: int, session: AsyncSession):
         clean_deadline = data.deadline.replace(tzinfo=None)
         new_task_model = Task(**data.model_dump(exclude={"deadline"}), deadline=clean_deadline, user_id = user_id)
