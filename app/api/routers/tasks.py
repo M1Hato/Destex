@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated
 from app.services.task_service import TaskService
 from app.database import get_async_session
 from app.models.user_model import User
@@ -35,3 +34,12 @@ async def update_task(
         session: AsyncSession = Depends(get_async_session)
 ):
     return await TaskService.update_task_service(data, current_user.id, task_id, session)
+
+
+@task_router.delete("/delete/{task_id}")
+async def delete_task(
+        task_id: int,
+        current_user: User = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await TaskService.delete_task_service(task_id, current_user.id, session)
