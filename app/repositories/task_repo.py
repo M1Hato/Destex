@@ -43,3 +43,20 @@ class TaskRepo:
             await session.commit()
 
         return updated_task
+
+
+    @staticmethod
+    async def delete_task_repo(task_id: int, user_id: int, session: AsyncSession):
+
+        stmt = (update(Task).where(
+            Task.id == task_id,
+                        Task.user_id == user_id,
+                        Task.is_deleted == False)
+                .values(is_deleted=True).returning(Task))
+
+        result = await session.execute(stmt)
+        deleted_task = result.scalar_one_or_none()
+        if deleted_task:
+            await session.commit()
+
+        return deleted_task

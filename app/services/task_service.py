@@ -37,6 +37,15 @@ class TaskService:
             raise HTTPException(status_code=404, detail="Task was not found")
         return result
 
+    @staticmethod
+    async def delete_task_service(task_id: int, user_id: int,  session: AsyncSession):
+        result = await TaskRepo.delete_task_repo(task_id, user_id, session)
+
+        if result is None:
+            raise HTTPException(status_code=404, detail="Task was not found")
+
+        return result
+
 
 
 
