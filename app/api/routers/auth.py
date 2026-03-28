@@ -13,13 +13,6 @@ auth_router = APIRouter(
     prefix="/auth",
 )
 
-
-# @auth_router.get("/get/user/{email}")
-# async def get_user(
-#         email: str,
-#         current_user = Depends(get_current_user)
-# ):
-#     return current_user
 @auth_router.get("/me")
 async def get_user(
         current_user = Depends(get_current_user),
