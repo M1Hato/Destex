@@ -11,6 +11,12 @@ task_router = APIRouter(
     prefix="/tasks",
 )
 
+@task_router.get("/all")
+async def get_all_tasks(
+        current_user: User = Depends(get_current_user),
+        session: AsyncSession = Depends(get_async_session)
+):
+    return await TaskService.get_task_repo(current_user.id, session)
 @task_router.post("/create")
 async def create_task(
         data: TaskCreate,
