@@ -10,16 +10,10 @@ from app.schemas.user_schemas import UserCreate, UserLogin
 from app.services.auth_service import AuthService
 
 auth_router = APIRouter(
+    tags= ["Auth"],
     prefix="/auth",
 )
 
-
-# @auth_router.get("/get/user/{email}")
-# async def get_user(
-#         email: str,
-#         current_user = Depends(get_current_user)
-# ):
-#     return current_user
 @auth_router.get("/me")
 async def get_user(
         current_user = Depends(get_current_user),

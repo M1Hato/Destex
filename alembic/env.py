@@ -10,6 +10,7 @@ from alembic import context
 
 from app.database import Base
 from app.models import user_model
+from app.models import task_model
 
 SYNC_DATABASE_URL = settings.DATABASE_URL.replace("asyncpg", "psycopg2")
 
