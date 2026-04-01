@@ -10,6 +10,7 @@ from app.schemas.user_schemas import UserCreate, UserLogin
 from app.services.auth_service import AuthService
 
 auth_router = APIRouter(
+    tags= ["Auth"],
     prefix="/auth",
 )
 
