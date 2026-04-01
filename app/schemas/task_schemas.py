@@ -27,6 +27,8 @@ class TaskUpdate(UserTask):
 class TaskRead(BaseModel):
     id: int
     user_id: int
+    title: str
+    description: str
     priority: Optional[TaskPriority]
     is_completed: bool
     created_at: datetime
