@@ -8,9 +8,14 @@ from app.schemas.task_schemas import TaskCreate
 class TaskRepo:
 
     @staticmethod
-    async def get_user_task_repo(user_id: int, session: AsyncSession):
+    async def get_user_task_repo(user_id: int, limit: int, offset: int, session: AsyncSession):
         result = await session.execute(
-            select(Task).where(Task.user_id == user_id, Task.is_deleted == False)
+            select(Task).where(
+                Task.user_id == user_id,
+                Task.is_deleted == False)
+            .order_by(Task.created_at.desc())
+            .limit(limit)
+            .offset(offset)
         )
         return result.scalars().all()
 

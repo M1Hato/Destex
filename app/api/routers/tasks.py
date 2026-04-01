@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.task_service import TaskService
 from app.database import get_async_session
@@ -16,9 +16,11 @@ task_router = APIRouter(
 @task_router.get("/all", response_model=List[TaskRead])
 async def get_all_tasks(
         current_user: User = Depends(get_current_user),
+        limit: int = Query(10, ge=1, le=10),
+        offset: int = Query(0, ge=0),
         session: AsyncSession = Depends(get_async_session)
 ):
-    return await TaskService.get_task_service(current_user.id, session)
+    return await TaskService.get_task_service(current_user.id, limit, offset, session)
 @task_router.post("/create", status_code = 201, response_model=TaskRead)
 async def create_task(
         data: TaskCreate,
