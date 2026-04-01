@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.task_model import Task
-from app.schemas.task_schemas import TaskCreate, TaskUpdate, TaskRead
+from app.schemas.task_schemas import TaskCreate
 
 class TaskRepo:
 
