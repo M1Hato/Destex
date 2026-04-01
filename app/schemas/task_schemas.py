@@ -1,21 +1,22 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+
 from app.models.task_model import TaskPriority
 
 
-class Task(BaseModel):
+class UserTask(BaseModel):
     title: str
     description: Optional[str] = None
     deadline: datetime
     priority: TaskPriority = TaskPriority.MEDIUM
 
 
-class TaskCreate(Task):
+class TaskCreate(UserTask):
     pass
 
 
-class TaskUpdate(Task):
+class TaskUpdate(UserTask):
     title: Optional[str] = None
     description: Optional[str] = None
     deadline: Optional[datetime] = None
@@ -23,9 +24,11 @@ class TaskUpdate(Task):
     is_completed: Optional[bool] = None
 
 
-class TaskRead(Task):
+class TaskRead(BaseModel):
     id: int
     user_id: int
+    priority: Optional[TaskPriority]
     is_completed: bool
-    is_deleted: bool
     created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
