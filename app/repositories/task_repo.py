@@ -8,10 +8,17 @@ from app.schemas.task_schemas import TaskCreate
 class TaskRepo:
 
     @staticmethod
-    async def get_user_task_repo(user_id: int, session: AsyncSession):
-        result = await session.execute(
-            select(Task).where(Task.user_id == user_id, Task.is_deleted == False)
-        )
+    async def get_user_task_repo(user_id: int, limit: int, offset: int, search, priority, session: AsyncSession):
+        stmt = select(Task).where(Task.user_id == user_id, Task.is_deleted == False)
+
+        if search:
+            stmt = stmt.where(Task.title.like(f"%{search}%"))
+        if priority:
+            stmt = stmt.where(Task.priority == priority)
+
+        stmt = stmt.order_by(Task.created_at.desc()).limit(limit).offset(offset)
+
+        result = await session.execute(stmt)
         return result.scalars().all()
 
     @staticmethod
