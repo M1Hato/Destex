@@ -2,7 +2,7 @@ from app.core.security import hash_password, verify_password
 
 
 def test_auth_password():
-    password = "secret123"
+    password = "secret1234"
 
     hashed = hash_password(password)
 
