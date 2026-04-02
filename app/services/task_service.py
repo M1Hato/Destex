@@ -24,7 +24,7 @@ class TaskService:
         result = await TaskRepo.create_task_repo(new_task_model, user_id, session)
         if result is None:
             logger.warning(f"Task was not found for user: {user_id}")
-            raise HTTPException(status_code=404, detail="Task was not created")
+            raise HTTPException(status_code=404, detail="Task was not created!")
 
         return result
 
