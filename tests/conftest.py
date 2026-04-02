@@ -4,6 +4,17 @@ from sqlalchemy.orm import sessionmaker
 from app.models.user_model import User
 from app.models.task_model import Task
 from app.database import Base
+from httpx import AsyncClient, ASGITransport
+from app.main import app
+import pytest_asyncio
+
+@pytest_asyncio.fixture
+async def client():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as ac:
+        yield ac
+
+
 
 TEST_BASE_URL = "sqlite+aiosqlite:///:memory:"
 engine = create_async_engine(TEST_BASE_URL)
