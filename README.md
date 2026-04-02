@@ -3,7 +3,6 @@
 Destex is a task management REST API built with FastAPI.
 The project demonstrates a production-style backend architecture with secure authentication, database integration, migrations, testing, and containerization.
 Destex is designed to help manage tasks and workflows efficiently and showcases modern Python backend development practices.
----
 
 ## 📌 About the project
 
@@ -25,8 +24,6 @@ The project demonstrates backend development skills including:
 * **Dockerized deployment**
 
 Destex is as a portfolio project to showcase Python backend skills and knowledge of production-ready API development.
-
----
 
 ## 🚀 Features
 
@@ -50,8 +47,6 @@ Destex is as a portfolio project to showcase Python backend skills and knowledge
 
 * Docker support
 
----
-
 ## 🧱 Tech Stack
 
 * **Python**
@@ -64,7 +59,6 @@ Destex is as a portfolio project to showcase Python backend skills and knowledge
 * **Docker**
 * **Pytest**
 
----
 
 ## 📂 Project Structure
 
@@ -88,8 +82,6 @@ Destex
 ├── .gitignore
 └── README.md
 ```
-
----
 
 ## ⚙️ Installation
 Installation instructions will be added soon.
