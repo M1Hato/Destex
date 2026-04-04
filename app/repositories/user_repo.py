@@ -38,7 +38,7 @@ class UserRepo:
             logger.warning(f"User with email {data.email} not found")
             raise HTTPException(status_code=401, detail="Invalid Email or Password")
 
-        check_pwd = verify_password(user.password, data.password)
+        check_pwd = verify_password(data.password, user.password)
 
         if not check_pwd:
             logger.warning(f"Password mismatch for user with email {data.email}")
