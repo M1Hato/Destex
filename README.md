@@ -15,8 +15,6 @@ The project demonstrates backend development skills including:
 
 * **JWT-based authentication**
 
-* **Role-based access control**
-
 * **Database integration and migrations with Alembic**
 
 * **Unit testing with pytest**
@@ -36,8 +34,6 @@ Destex is as a portfolio project to showcase Python backend skills and knowledge
 * Filtering and pagination
 
 * Soft delete for tasks
-
-* Role-based access (admin / user)
 
 * Database migrations with Alembic
 
@@ -67,20 +63,30 @@ Destex
 │
 ├── app
 │   ├── api
-│   │   └── routers
+│   │   ├── routers
 │   ├── core
-│   ├── db
 │   ├── models
+│   ├── repositories
 │   ├── schemas
 │   ├── services
-│   └── utils
+│   ├── utils
+│   ├── config.py
+│   ├── database.py
+│   ├── logging.py
+│   └── main.py
 │
-├── alembic
 ├── tests
+│   ├── integration
+│   ├── unit
+│   └── conftest.py
 │
+├── .dockerignore
 ├── .env
 ├── .gitignore
-└── README.md
+├── docker-compose.yml
+├── Dockerfile
+├── README.md
+└── requirements.txt
 ```
 
 ## ⚙️ Installation
